@@ -1,9 +1,12 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Detail from "./pages/Detail";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import "./App.css";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import { getUserInfo } from "./lib/api/auth";
 
 function App() {
   const [expenses, setExpenses] = useState([
@@ -66,6 +69,16 @@ function App() {
     },
   ]);
 
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    getUserInfo().then((res) => {
+      console.log("현재 로그인된 유저가 있냐? : ", res);
+    });
+  }, []);
+
+  console.log(user);
+
   return (
     <>
       <BrowserRouter>
@@ -78,6 +91,8 @@ function App() {
             path="/detail/:id"
             element={<Detail expenses={expenses} setExpenses={setExpenses} />}
           />
+          <Route path="/sign_in" element={<SignIn setUser={setUser} />} />
+          <Route path="/register" element={<SignUp />} />
         </Routes>
       </BrowserRouter>
     </>
